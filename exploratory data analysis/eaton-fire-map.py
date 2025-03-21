@@ -1,3 +1,7 @@
+'''
+this file outputs the damages done by the eaton fire and maps it out based on different levels of damage on the map.
+'''
+
 import pandas as pd
 import folium
 from folium.plugins import MarkerCluster
