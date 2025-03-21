@@ -1,5 +1,18 @@
+import pandas as pd
 import folium
 from folium.plugins import MarkerCluster
+
+# Load the dataset (update the path if needed)
+df = pd.read_csv("datasets/b8aeb030-140d-43d2-aa29-1a80862e3d62.csv")  # Ensure correct path
+
+# Convert date column to datetime
+df['Incident Start Date'] = pd.to_datetime(df['Incident Start Date'], errors='coerce')
+
+# Filter for fires in January 2025
+jan_2025_fires = df[
+    (df['Incident Start Date'].dt.year == 2025) &
+    (df['Incident Start Date'].dt.month == 1)
+]
 
 # Filter to just Eaton Fire
 eaton_fire = jan_2025_fires[jan_2025_fires['* Incident Name'] == 'Eaton']
@@ -23,7 +36,7 @@ def damage_color(damage):
     else:
         return "gray"
 
-# Add markers to map
+# Add markers to the map
 for _, row in eaton_fire.iterrows():
     folium.CircleMarker(
         location=[row['Latitude'], row['Longitude']],
@@ -34,5 +47,7 @@ for _, row in eaton_fire.iterrows():
         popup=f"{row['* City']} | {row['* Damage']}"
     ).add_to(marker_cluster)
 
-eaton_map.save("/mnt/data/eaton_fire_map.html")
-"/mnt/data/eaton_fire_map.html"
+# Save the map
+eaton_map.save("exploratory data analysis/eaton_fire_map.html")  # Adjust path if needed
+
+print("Eaton Fire map has been successfully created!")
